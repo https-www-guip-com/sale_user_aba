@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+    <record model="ir.ui.view" id="sale_order_seguimiento_plataforma_inherit_form_view">
+        <field name="name">sale.order.form.view_seguimiento_plataforma</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            
+           
+            <div class="oe_button_box" position="inside">
+                
+                <button class="oe_stat_button" name="document_view_sistemas" type="object" icon="fa-spinner">
+                        <field string="Plataforma" name="document_count_sistemas" widget="statinfo"/>
+                </button>
+                
+                <button class="oe_stat_button" name="document_view_operaciones" type="object" icon="fa-briefcase">
+                     <field string="Operaciones" name="document_count_operaciones" widget="statinfo"/>
+                </button>
+               
+            </div>
+
+
+            <field name="payment_term_id" position="after">
+                    <field name="numero_orden" />
+            </field>
+            
+             <notebook>
+                    <page string="ABA">
+                        <group colspan="4">
+                                
+                                <field name="usuarios_aba_ids"
+                                        nolabel="1">
+                                        <tree>
+                                                <field name="name" />
+                                                <field name="codigo" />
+                                                <field name="terminal" />
+                                                <field name="tipo_terminal" />
+                                        </tree>
+                                </field>  
+                        </group>
+                    </page>   
+
+                    
+                 </notebook>
+        
+        </field>
+    </record>
+
+    </data>
+</odoo>
