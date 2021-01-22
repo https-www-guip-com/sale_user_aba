@@ -162,21 +162,21 @@ class SaleOrderAba(models.Model):
 
                 operaciones_line_vals = {
                             'sale_id':self.id,
-                            'name':aba_campos.name_agente_atlantida 
+                            'name':self.partner_id.name,
                             'email_from':self.partner_id.email,
                             'description': self.note,
                             'stage_id': '1',
                             'date_open': now,
                             'vendedor_id': self.user_id.id,
-                            
+
                             'name_agente_atlantida': aba_campos.name_agente_atlantida,
-                            'terminal': aba_campos.terminal,
                             'codigo': aba_campos.codigo,
-                            'rtn': aba_campos.rtn,
+                            'terminal': aba_campos.terminal,
                             'name_contacto': aba_campos.name_contacto,
+                            'rtn': aba_campos.rtn,
                             'tipo_chip_selec': aba_campos.tipo_chip_selec,
-                            'recibe_gestion': aba_campos.recibe_gestion,
                             'usuario': aba_campos.usuario,
+                            'recibe_gestion': aba_campos.recibe_gestion,
                             'description': aba_campos.comentarios,
                             'token': aba_campos.token,
                             'tipo_terminal': aba_campos.tipo_terminal,

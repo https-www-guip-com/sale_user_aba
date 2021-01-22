@@ -24,7 +24,6 @@ class SaleOrderOperaciones(models.Model):
     name_agente_atlantida = fields.Char("Nombre de agente atlantida")
     codigo = fields.Integer("Codigo Completo")
     terminal = fields.Integer("Terminal")
-    
     #street = fields.Char('Direccion')
     #street2 = fields.Char('Segunda direccion')
     #codigo_zip = fields.Char('Codigo Postal', change_default=True)
@@ -43,11 +42,11 @@ class SaleOrderOperaciones(models.Model):
     tipo_terminal = fields.Selection(tipo_terminales, string='Tipo de terminal', index=True, default=tipo_terminales[0][0])
     usuarios_aba_id = fields.Many2one('sale.order',string="Usuarios Creacion")
 
-    
+
+
 class SaleOrderPlataforma(models.Model):
     _inherit = "crm_flujo_nuevo_sistemas"
 
     sale_id = fields.Many2one('sale.order', string="Mostrar info de la oportunidad",
                                   help="Desde este campo puedes ver el inicio de la oportunidad en el CRM" ,
                                   ondelete='cascade', index=True)
-
