@@ -28,7 +28,7 @@ Module to manage sale aba user
         'security/ir.model.access.csv',
         'views/inherint_aba_usuarios.xml',
         'views/inherint_sale.xml',
-        'views/inherint_operaciones_aba',
+        'views/inherint_operaciones_aba.xml',
         'data/mail_template.xml',
     ],
     'demo': [
