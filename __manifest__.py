@@ -21,6 +21,7 @@ Sale userr aba
 Module to manage sale aba user
 """,
     'depends': ['sale',
+                'sale_management',
                 'account'
                 ],
     'data': [

@@ -159,7 +159,7 @@ class SaleOrderAba(models.Model):
             'confirmation_date': fields.Datetime.now()
         })
         self._action_confirm()
-        #self.enviar_sistemas()
+        self.enviar_sistemas()
         if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
             self.action_done()
         return True 
