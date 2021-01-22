@@ -168,8 +168,20 @@ class SaleOrderAba(models.Model):
                             'stage_id': '1',
                             'date_open': now,
                             'vendedor_id': self.user_id.id,
+
+                            'name_agente_atlantida': self.aba_campos.name_agente_atlantida,
+                            'codigo': self.aba_campos.codigo,
+                            'terminal': self.aba_campos.terminal,
+                            'name_contacto': self.aba_campos.name_contacto,
+                            'rtn': self.aba_campos.rtn,
+                            'tipo_chip_selec': self.aba_campos.tipo_chip_selec,
+                            'usuario': self.aba_campos.usuario,
+                            'recibe_gestion': self.aba_campos.recibe_gestion,
+                            'description': self.aba_campos.comentarios,
+                            'token': self.aba_campos.token,
+                            'tipo_terminal': self.aba_campos.tipo_terminal,
                             }
-            operaciones_crear.create(operaciones_line_vals)
+                operaciones_crear.create(operaciones_line_vals)
                    
             self.env.user.notify_warning(message='Creacion de orden de venta ABA creada correctamente') 
         else:
