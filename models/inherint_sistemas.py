@@ -24,9 +24,8 @@ class SaleOrderOperaciones(models.Model):
     name_agente_atlantida = fields.Char("Nombre de agente atlantida")
     codigo = fields.Integer("Codigo Completo")
     terminal = fields.Integer("Terminal")
-    street = fields.Char('Direccion')
-    street2 = fields.Char('Segunda direccion')
-
+    #street = fields.Char('Direccion')
+    #street2 = fields.Char('Segunda direccion')
     #codigo_zip = fields.Char('Codigo Postal', change_default=True)
     #city = fields.Char('Ciudad')
     #state_id = fields.Many2one("res.country.state", string='Departamento')
