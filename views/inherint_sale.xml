@@ -23,7 +23,7 @@
 
 
             <field name="payment_term_id" position="after">
-                    <field name="numero_orden" />
+                    <field name="funciona_aba" />
             </field>
             
              <notebook>

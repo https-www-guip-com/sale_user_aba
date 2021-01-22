@@ -14,7 +14,7 @@ class SaleOrderAba(models.Model):
     _inherit = "sale.order"
 
     usuarios_aba_ids = fields.One2many('creacion_usuarios_aba','usuarios_aba_id')
-    numero_orden = fields.Char("# Orden de instalacion")
+    #numero_orden = fields.Char("# Orden de instalacion")
 
     crm_sistemas_id = fields.Many2one('crm_flujo_nuevo_sistemas', string="Mostrar Seguimiento Plataforma",
                                   help="Desde este campo puedes ver el seguimiento de la oportunidad desde el lado de la plataforma" ,
@@ -25,6 +25,7 @@ class SaleOrderAba(models.Model):
                                   ondelete='cascade', index=True)
     
     creado_en = fields.Boolean('Creado', default=False)
+    funciona_aba = fields.Boolean('Solicitud ABA', default=False)
 
     #Boton de seguimiento Plataforma
     @api.multi
@@ -140,9 +141,16 @@ class SaleOrderAba(models.Model):
             plataforma_crear = self.write({'operaciones_id':pes.id})
             self.envio_correo_notifi()
             stage = self.write({'creado_en':True})
-            self.env.user.notify_success(message='Se envio correctamente a plataforma y operaciones.')
+            self.env.user.notify_success(message='Creacion de orden de venta Dilo creada correctamente')
         else:
             self.env.user.notify_warning(message='No se puede enviar ya que esta creado en plataforma y operaciones') 
+
+
+    #Enviar funcion para Operaciones
+    @api.multi
+    def enviar_proceso_aba(self):
+        self.env.user.notify_warning(message='Creacion de orden de venta ABA creada correctamente') 
+
 
     #Modifico el boton de confirmar el pedido en el modulo de ventas sale_order.
     @api.multi
@@ -159,7 +167,12 @@ class SaleOrderAba(models.Model):
             'confirmation_date': fields.Datetime.now()
         })
         self._action_confirm()
-        self.enviar_sistemas()
+
+        if self.funciona_aba == True:
+            self.enviar_proceso_aba()
+        else:
+            self.enviar_sistemas()
+        
         if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
             self.action_done()
         return True 
