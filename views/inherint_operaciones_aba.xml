@@ -28,7 +28,6 @@
                         <group colspan="4">
                               <field name="tipo_chip_selec" />
                               <field name="token" />
-                              <field name="comentarios" />
                         </group>
 
                         <group colspan="8">
