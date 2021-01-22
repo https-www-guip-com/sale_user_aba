@@ -149,7 +149,33 @@ class SaleOrderAba(models.Model):
     #Enviar funcion para Operaciones
     @api.multi
     def enviar_proceso_aba(self):
-        self.env.user.notify_warning(message='Creacion de orden de venta ABA creada correctamente') 
+        stage = self.env['sale.order'].search([('id', '=', self.id)], limit=1)
+        
+        today = date.today()
+        now = datetime.strftime(today, '%Y-%m-%d %H:%M:%S')
+        
+        if self.creado_en == False:
+            #Creacion de operaciones
+            operaciones_crear = self.env['crm_flujo_nuevo_operaciones']
+            
+            for aba_campos in self.usuarios_aba_ids:
+
+                operaciones_line_vals = {
+                            'sale_id':self.id,
+                            'name':self.partner_id.name,
+                            'email_from':self.partner_id.email,
+                            'description': self.note,
+                            'stage_id': '1',
+                            'date_open': now,
+                            'vendedor_id': self.user_id.id,
+                            }
+            operaciones_crear.create(operaciones_line_vals)
+                   
+            self.env.user.notify_warning(message='Creacion de orden de venta ABA creada correctamente') 
+        else:
+            self.env.user.notify_warning(message='Ya esta creada esta orden de venta ABA') 
+        
+  
 
 
     #Modifico el boton de confirmar el pedido en el modulo de ventas sale_order.
