@@ -11,6 +11,9 @@
                     <field name="terminal" />
                     <field name="tipo_chip_selec" />
                     <field name="tipo_terminal" />
+                    <field name="city" />
+                    <field name="state_id" />
+                    <field name="country_id" />
                 </tree>
             </field>
         </record>
@@ -28,7 +31,6 @@
                         <field name="tipo_terminal" />
                     </group>
                     <group colspan="4" col="4">
-                        <field name="codigo_zip" />
                         <field name="city" />
                         <field name="state_id" />
                         <field name="country_id" />

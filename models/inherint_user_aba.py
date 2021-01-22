@@ -16,15 +16,15 @@ tipo_terminales = [
 class salesaba_inherint_usuarios_aba(models.Model):
     _name = "creacion_usuarios_aba"
     
-    name = fields.Char("Nombre de agente atlantida")
-    codigo = fields.Integer("Codigo")
+    name_agente_atlantida = fields.Char("Nombre de agente atlantida")
+    codigo = fields.Integer("Codigo Completo")
     terminal = fields.Integer("Terminal")
     street = fields.Char('Direccion')
     street2 = fields.Char('Segunda direccion')
 
-    codigo_zip = fields.Char('Codigo Postal', change_default=True)
+    #codigo_zip = fields.Char('Codigo Postal', change_default=True)
     city = fields.Char('Ciudad')
-    state_id = fields.Many2one("res.country.state", string='Estado')
+    state_id = fields.Many2one("res.country.state", string='Departamento')
     country_id = fields.Many2one('res.country', string='País')
 
     name_contacto = fields.Char("Nombre de contacto")
