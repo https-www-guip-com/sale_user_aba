@@ -33,10 +33,14 @@
                                 <field name="usuarios_aba_ids"
                                         nolabel="1">
                                         <tree>
-                                                <field name="name" />
+                                             <field name="name_agente_atlantida" />
                                                 <field name="codigo" />
                                                 <field name="terminal" />
+                                                <field name="tipo_chip_selec" />
                                                 <field name="tipo_terminal" />
+                                                <field name="city" />
+                                                <field name="state_id" />
+                                                <field name="country_id" />
                                         </tree>
                                 </field>  
                         </group>

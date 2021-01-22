@@ -6,7 +6,7 @@
             <field name="model">creacion_usuarios_aba</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name" />
+                    <field name="name_agente_atlantida" />
                     <field name="codigo" />
                     <field name="terminal" />
                     <field name="tipo_chip_selec" />
@@ -24,7 +24,7 @@
             <field name="arch" type="xml">
                 <form string="Info usuarios">
                     <group colspan="4" col="4">
-                        <field name="name" />
+                        <field name="name_agente_atlantida" />
                         <field name="codigo" />
                         <field name="terminal" />
                         <field name="tipo_chip_selec" />
