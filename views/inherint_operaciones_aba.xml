@@ -8,6 +8,7 @@
         <field name="inherit_id" ref="crm_funel_venta_guip.data_crm_form"/>
         <field name="arch" type="xml">
              
+
              <notebook>
                     <page string="ABA">
 

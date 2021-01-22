@@ -162,24 +162,35 @@ class SaleOrderAba(models.Model):
 
                 operaciones_line_vals = {
                             'sale_id':self.id,
-                            'name':self.partner_id.name,
+                            'name':aba_campos.name_agente_atlantida 
                             'email_from':self.partner_id.email,
                             'description': self.note,
                             'stage_id': '1',
                             'date_open': now,
                             'vendedor_id': self.user_id.id,
+<<<<<<< HEAD
+                            'name_agente_atlantida': aba_campos.name_agente_atlantida,
+                            'terminal': aba_campos.terminal,
+                            'codigo': aba_campos.codigo,
+                            'rtn': aba_campos.rtn,
+                            'name_contacto': aba_campos.name_contacto,
+                            'tipo_chip_selec': aba_campos.tipo_chip_selec,
+                            'recibe_gestion': aba_campos.recibe_gestion,
+                            'usuario': aba_campos.usuario,
+=======
 
-                            'name_agente_atlantida': self.aba_campos.name_agente_atlantida,
-                            'codigo': self.aba_campos.codigo,
-                            'terminal': self.aba_campos.terminal,
-                            'name_contacto': self.aba_campos.name_contacto,
-                            'rtn': self.aba_campos.rtn,
-                            'tipo_chip_selec': self.aba_campos.tipo_chip_selec,
-                            'usuario': self.aba_campos.usuario,
-                            'recibe_gestion': self.aba_campos.recibe_gestion,
-                            'description': self.aba_campos.comentarios,
-                            'token': self.aba_campos.token,
-                            'tipo_terminal': self.aba_campos.tipo_terminal,
+                            'name_agente_atlantida': aba_campos.name_agente_atlantida,
+                            'codigo': aba_campos.codigo,
+                            'terminal': aba_campos.terminal,
+                            'name_contacto': aba_campos.name_contacto,
+                            'rtn': aba_campos.rtn,
+                            'tipo_chip_selec': aba_campos.tipo_chip_selec,
+                            'usuario': aba_campos.usuario,
+                            'recibe_gestion': aba_campos.recibe_gestion,
+>>>>>>> main
+                            'description': aba_campos.comentarios,
+                            'token': aba_campos.token,
+                            'tipo_terminal': aba_campos.tipo_terminal,
                             }
                 operaciones_crear.create(operaciones_line_vals)
                    
