@@ -29,6 +29,7 @@ Module to manage sale aba user
         'views/inherint_aba_usuarios.xml',
         'views/inherint_sale.xml',
         'views/inherint_operaciones_aba.xml',
+        'views/vista_motivo_perdida.xml',
         'data/mail_template.xml',
     ],
     'demo': [
