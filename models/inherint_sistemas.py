@@ -24,7 +24,7 @@ tipo_terminales = [
 class SaleOrderOperaciones(models.Model):
     _inherit = "crm_flujo_nuevo_operaciones"
 
-    sale_id = fields.Many2one('sale.order', string="Mostrar info de la oportunidad",
+    sale_id = fields.Many2one('sale.order', string="Orden de venta",
                                   help="Desde este campo puedes ver el inicio de la oportunidad en el CRM" ,
                                   ondelete='cascade', index=True)
 

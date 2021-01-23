@@ -28,6 +28,10 @@
             <field name="codigo_dispositvio" position="after">
                     <field name="elegir_proveedor_id" />
             </field>
+
+            <field name="crm_id" position="after">
+                <field name="sale_id"  readonly="1"/>
+            </field>
             
             <notebook>
                     <page string="ABA">

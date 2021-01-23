@@ -150,7 +150,7 @@
                                             <tr><td valign="top" style="font-size: 13px;">
                                                 <div>
                                                     <p>Buen día,</p>
-                                                    <p>Nos complace informarle que su solicitud de instalacion para el cliente  
+                                                    <p>Nos complace informarle que su solicitud de instalacion para el cliente </p>
                                                     <strong> ${object.name or ''} </strong> 
                                                        
                                                     <br/><br/>
