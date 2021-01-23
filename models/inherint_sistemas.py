@@ -176,7 +176,29 @@ class SaleOrderOperaciones(models.Model):
         return res
 
 
-
+    
+    #Boton de seguimiento Plataforma
+    @api.multi
+    def document_view_compras(self):
+        self.ensure_one()
+        domain = [
+            ('purchase_aba_id', '=', self.id)]
+        return {
+            'name': _('Compras'),
+            'domain': domain,
+            'res_model': 'purchase.order',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'kanban,tree,form',
+            'view_type': 'kanban',
+            'help': _('''<p class="oe_view_nocontent_create">
+                           Click para crear un nuevo 
+                        </p>'''),
+            'limit': 80,
+            'context': "{'default_employee_ref': '%s'}" % self.id
+        }
+    
+    document_count_compras = fields.Char(string='Plataforma')
 
 
 

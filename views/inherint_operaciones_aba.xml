@@ -23,6 +23,16 @@
 
                               
             </header>
+
+
+             <div class="oe_button_box" position="inside">
+                
+                <button class="oe_stat_button" name="document_view_compras" type="object" icon="fa-spinner">
+                        <field string="Compras" name="document_count_compras" widget="statinfo"/>
+                </button>
+               
+            </div>
+
             
 
             <field name="codigo_dispositvio" position="after">
