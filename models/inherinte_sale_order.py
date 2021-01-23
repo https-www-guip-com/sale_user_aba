@@ -162,7 +162,7 @@ class SaleOrderAba(models.Model):
 
                 operaciones_line_vals = {
                             'sale_id':self.id,
-                            'name':self.partner_id.name,
+                            'name':aba_campos.name_agente_atlantida,
                             'email_from':self.partner_id.email,
                             'description': self.note,
                             'stage_id': '1',

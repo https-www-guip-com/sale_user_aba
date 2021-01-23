@@ -1,5 +1,12 @@
-from odoo import api, fields, models
-import odoo.addons.decimal_precision as dp
+import logging
+from datetime import date
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.tools.translate import _
+from odoo.tools import email_re, email_split
+from odoo.exceptions import UserError, AccessError
 
 tipo_chip = [
     ('1', 'Claro'),
@@ -43,10 +50,66 @@ class SaleOrderOperaciones(models.Model):
     usuarios_aba_id = fields.Many2one('sale.order',string="Usuarios Creacion")
 
 
+    purchase_aba_id = fields.Many2one('purchase.order', string="Mostrar info de la compra",
+                                  help="Desde este campo puedes ver la relacion de la compra" ,
+                                  ondelete='cascade', index=True)
+    
+
+    elegir_proveedor_id = fields.Many2one('res.partner', string="Seleccionar proveedor",
+                                  help="Seleccione al proveedor el cual se le creara una orden de compra" ,
+                                  ondelete='cascade', index=True)
+
+
+    @api.multi
+    def enviar_compras_aba(self):
+        operaciones_crear = self.env['purchase.order']
+        order_linea_crear = self.env['purchase.order.line']
+
+        today = date.today()
+        now = datetime.strftime(today, '%Y-%m-%d %H:%M:%S')
+
+        operaciones_line_vals = {
+                            'partner_id':self.sale_id.partner_id.id,
+                            'date_order': now,
+                            'user_id': self.user_id.id,
+                            }
+
+        res = operaciones_crear.create(operaciones_line_vals)
+        # Orden de compra order_line
+
+        for ventas in self.sale_id.order_line:
+
+            linea_productos_vals = {
+                                'order_id': res.id,
+                                'product_id':ventas.product_id.id,
+                                'name': ventas.name,
+                                'date_planned': self.sale_id.confirmation_date,
+                                'product_qty': ventas.product_uom_qty,
+                                'product_uom': ventas.product_uom.id,
+                                'price_unit': ventas.price_unit,
+                                }
+
+            order_linea_crear.create(linea_productos_vals)
+        self.env.user.notify_warning(message='Se creo la orden de compra') 
+
+    #Envio de correo al vendedor asignado
+    @api.multi
+    def envio_correo_instalacion_proveedor(self):
+        self.env.ref('sale_user_aba.mail_template_notificacion_instalacion_d2mini'). \
+        send_mail(self.id, force_send=True)
+
 
 class SaleOrderPlataforma(models.Model):
     _inherit = "crm_flujo_nuevo_sistemas"
 
     sale_id = fields.Many2one('sale.order', string="Mostrar info de la oportunidad",
+                                  help="Desde este campo puedes ver el inicio de la oportunidad en el CRM" ,
+                                  ondelete='cascade', index=True)
+
+
+class Operaciones_Compras(models.Model):
+    _inherit = "purchase.order"
+
+    purchase_aba_id = fields.Many2one('crm_flujo_nuevo_operaciones', string="Mostrar info de las oportunidades",
                                   help="Desde este campo puedes ver el inicio de la oportunidad en el CRM" ,
                                   ondelete='cascade', index=True)

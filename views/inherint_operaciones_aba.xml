@@ -7,8 +7,18 @@
         <field name="model">crm_flujo_nuevo_operaciones</field>
         <field name="inherit_id" ref="crm_funel_venta_guip.data_crm_form"/>
         <field name="arch" type="xml">
-             
-             <notebook>
+            
+
+            <header>
+
+                     <button name="enviar_compras_aba" string="Orden de compra" type="object" 
+                class="oe_highlight" />
+        
+            
+            </header>
+            
+            
+            <notebook>
                     <page string="ABA">
 
                         <group colspan="4">
