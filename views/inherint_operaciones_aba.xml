@@ -11,12 +11,23 @@
 
             <header>
 
-                     <button name="enviar_compras_aba" string="Orden de compra" type="object" 
-                class="oe_highlight" />
-        
-            
+                     <button name="enviar_compras_aba" string="Orden de compra" 
+                            type="object" 
+                            attrs="{'invisible': ['|', ('active','=',False), ('probability', '!=', 50)]}"
+                            class="oe_highlight" />
+
+                    <button name="envio_aprobacion" string="Enviar Aprobacion" 
+                            type="object" 
+                            attrs="{'invisible': ['|', ('active','=',False), ('probability', '!=', 40)]}"
+                            class="oe_highlight" />
+
+                              
             </header>
             
+
+            <field name="codigo_dispositvio" position="after">
+                    <field name="elegir_proveedor_id" />
+            </field>
             
             <notebook>
                     <page string="ABA">

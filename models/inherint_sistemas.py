@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 
 tipo_chip = [
     ('1', 'Claro'),
@@ -60,10 +60,16 @@ class SaleOrderOperaciones(models.Model):
                                   ondelete='cascade', index=True)
 
 
+    #Estos campos booleanos son para llevar un control de que no se mueva de etapa de envio aprobacion y de envio a compras y las demas si no se ha hecho bien el proceso
+    enviado_apro = fields.Boolean(string='Enviado Aprobacion')
+    enviado_compra = fields.Boolean(string='Enviado a compras')
+    instalado_aba = fields.Boolean(string='Instalado')
+
     @api.multi
     def enviar_compras_aba(self):
         operaciones_crear = self.env['purchase.order']
         order_linea_crear = self.env['purchase.order.line']
+        stage = self.env['crm_flujo_nuevo_operaciones'].search([('id', '=', self.id)], limit=1)
 
         today = date.today()
         now = datetime.strftime(today, '%Y-%m-%d %H:%M:%S')
@@ -90,6 +96,7 @@ class SaleOrderOperaciones(models.Model):
                                 }
 
             order_linea_crear.create(linea_productos_vals)
+        stage = self.write({'probability': '70'})
         self.env.user.notify_warning(message='Se creo la orden de compra') 
 
     #Envio de correo al vendedor asignado
@@ -97,6 +104,73 @@ class SaleOrderOperaciones(models.Model):
     def envio_correo_instalacion_proveedor(self):
         self.env.ref('sale_user_aba.mail_template_notificacion_instalacion_d2mini'). \
         send_mail(self.id, force_send=True)
+
+    #Perfil que se encarga de aprobar para que envie a instalacion
+    @api.multi
+    def envio_aprobacion(self):
+        stage = self.env['crm_flujo_nuevo_operaciones'].search([('id', '=', self.id)], limit=1)
+                         
+        if self.stage_id.envio_aprobacion == True:
+                #Cambiar estatus aqui cuando se pase a produccion verificar este paso
+            stage = self.write({'stage_id': '4'})
+            stage = self.write({'probability': '50'})
+            stage = self.write({'enviado_apro': True})
+            self.env.user.notify_success(message='Se envio aprobacion correctamente.')
+        else: 
+            self.env.user.notify_info(message='Ya se envio aprobacion') 
+        return stage   
+
+
+    #Metodos ORM
+    @api.multi
+    def write(self, vals):
+        for ticket in self:
+            
+            if vals.get('stage_id'):
+                
+                stage_obj = self.env['flujo_etapas_operaciones'].browse([vals['stage_id']])                
+                
+                if stage_obj.sequence == '1':
+                    if ticket.enviado_apro == False:
+                       vals['probability'] = '10'
+                    else:
+                        raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion")
+                    
+                if stage_obj.sequence == '2':
+                        if self.enviado_apro == False:
+                            vals['probability'] = '20'
+                        else:
+                            raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion")
+                    
+                if stage_obj.sequence == '3':
+                        if self.enviado_apro == False:
+                            vals['probability'] = '40'
+                        else:
+                                raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion")
+                
+                if stage_obj.sequence == '4':  
+                   raise ValidationError("Para enviar esta etapa se tiene que hacer por medio de los botones de funcion de enviar aprobacion")
+          
+                if stage_obj.sequence == '5':
+                    raise ValidationError("En esta etapa se tiene que enviar por medio de una orden de compra llevando el flujo establecido")
+
+                if stage_obj.sequence == '6' and self.enviado_apro == True and self.enviado_compra == True:
+                        vals['probability'] = '100'
+
+                if stage_obj.sequence == '7':
+                    raise ValidationError("Esta instalacion se devolvio")
+
+                if stage_obj.sequence == '8':
+                    raise ValidationError("Esta instalacion esta en otros")
+        res = super(SaleOrderOperaciones, self).write(vals)
+
+        return res
+
+
+
+
+
+
 
 
 class SaleOrderPlataforma(models.Model):
