@@ -151,11 +151,8 @@
                                                 <div>
                                                     <p>Buen día,</p>
                                                     <p>Nos complace informarle que su solicitud de instalacion para el cliente  
-                                                    <strong> ${object.partner_id.name or ''} </strong> 
-                                                    
-                                                    con orden numero 
-                                                    <strong> ${object.name} </strong> se ha creado correctamente </p>
-                                                    
+                                                    <strong> ${object.name or ''} </strong> 
+                                                       
                                                     <br/><br/>
                                                     <p>Gracias por su atención.</p>
                                                 </div>

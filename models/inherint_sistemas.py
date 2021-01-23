@@ -67,44 +67,53 @@ class SaleOrderOperaciones(models.Model):
 
     @api.multi
     def enviar_compras_aba(self):
-        operaciones_crear = self.env['purchase.order']
-        order_linea_crear = self.env['purchase.order.line']
-        stage = self.env['crm_flujo_nuevo_operaciones'].search([('id', '=', self.id)], limit=1)
 
-        today = date.today()
-        now = datetime.strftime(today, '%Y-%m-%d %H:%M:%S')
+        if self.elegir_proveedor_id.email: 
+        
+            operaciones_crear = self.env['purchase.order']
+            order_linea_crear = self.env['purchase.order.line']
+            stage = self.env['crm_flujo_nuevo_operaciones'].search([('id', '=', self.id)], limit=1)
 
-        operaciones_line_vals = {
-                            'partner_id':self.sale_id.partner_id.id,
-                            'date_order': now,
-                            'user_id': self.user_id.id,
-                            }
+            today = date.today()
+            now = datetime.strftime(today, '%Y-%m-%d %H:%M:%S')
 
-        res = operaciones_crear.create(operaciones_line_vals)
-        # Orden de compra order_line
-
-        for ventas in self.sale_id.order_line:
-
-            linea_productos_vals = {
-                                'order_id': res.id,
-                                'product_id':ventas.product_id.id,
-                                'name': ventas.name,
-                                'date_planned': self.sale_id.confirmation_date,
-                                'product_qty': ventas.product_uom_qty,
-                                'product_uom': ventas.product_uom.id,
-                                'price_unit': ventas.price_unit,
+            operaciones_line_vals = {
+                                'partner_id':self.elegir_proveedor_id.id,
+                                'date_order': now,
+                                'user_id': self.user_id.id,
                                 }
 
-            order_linea_crear.create(linea_productos_vals)
-        stage = self.write({'probability': '70'})
-        self.env.user.notify_warning(message='Se creo la orden de compra') 
+            res = operaciones_crear.create(operaciones_line_vals)
+        # Orden de compra order_line
+
+            for ventas in self.sale_id.order_line:
+
+                linea_productos_vals = {
+                                    'order_id': res.id,
+                                    'product_id':ventas.product_id.id,
+                                    'name': ventas.name,
+                                    'date_planned': self.sale_id.confirmation_date,
+                                    'product_qty': ventas.product_uom_qty,
+                                    'product_uom': ventas.product_uom.id,
+                                    'price_unit': ventas.price_unit,
+                                    }
+
+                order_linea_crear.create(linea_productos_vals)
+        
+            self.envio_correo_instalacion_proveedor()
+            stage = self.write({'probability': '70'})
+            stage = self.write({'stage_id': '5'})
+            self.env.user.notify_success(message='Se creo la orden de compra, y se envio la orden de instalacion al proveedor') 
+        else:
+            self.env.user.notify_warning(message='No tiene agregado al proveedor al que se le enviara la orden de instalacion') 
+
 
     #Envio de correo al vendedor asignado
     @api.multi
     def envio_correo_instalacion_proveedor(self):
         self.env.ref('sale_user_aba.mail_template_notificacion_instalacion_d2mini'). \
         send_mail(self.id, force_send=True)
-
+        
     #Perfil que se encarga de aprobar para que envie a instalacion
     @api.multi
     def envio_aprobacion(self):
@@ -130,37 +139,37 @@ class SaleOrderOperaciones(models.Model):
                 
                 stage_obj = self.env['flujo_etapas_operaciones'].browse([vals['stage_id']])                
                 
-                if stage_obj.sequence == '1':
+                if stage_obj.sequence == '0':
                     if ticket.enviado_apro == False:
                        vals['probability'] = '10'
                     else:
                         raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion")
                     
-                if stage_obj.sequence == '2':
+                if stage_obj.sequence == '1':
                         if self.enviado_apro == False:
                             vals['probability'] = '20'
                         else:
                             raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion")
                     
-                if stage_obj.sequence == '3':
+                if stage_obj.sequence == '2':
                         if self.enviado_apro == False:
                             vals['probability'] = '40'
                         else:
                                 raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion")
                 
-                if stage_obj.sequence == '4':  
+                if stage_obj.sequence == '3':  
                    raise ValidationError("Para enviar esta etapa se tiene que hacer por medio de los botones de funcion de enviar aprobacion")
           
-                if stage_obj.sequence == '5':
+                if stage_obj.sequence == '4':
                     raise ValidationError("En esta etapa se tiene que enviar por medio de una orden de compra llevando el flujo establecido")
 
-                if stage_obj.sequence == '6' and self.enviado_apro == True and self.enviado_compra == True:
+                if stage_obj.sequence == '5' and self.enviado_apro == True and self.enviado_compra == True:
                         vals['probability'] = '100'
 
-                if stage_obj.sequence == '7':
+                if stage_obj.sequence == '6':
                     raise ValidationError("Esta instalacion se devolvio")
 
-                if stage_obj.sequence == '8':
+                if stage_obj.sequence == '7':
                     raise ValidationError("Esta instalacion esta en otros")
         res = super(SaleOrderOperaciones, self).write(vals)
 
