@@ -130,40 +130,6 @@ class SaleOrderOperaciones(models.Model):
         return stage   
 
 
-    #Generar la orden para que se agrege el contrato permanente
-    @api.multi
-    def contrato_recurrente(self):
-        #Modulo para buscar el contrato segun el proveedor
-        operaciones_crear = self.env['contract.contract'].search([('id', '=', self.sale_id.partner_id.id),('purchase_aba_id', '=', True)  ], limit=1) 
-        #Moddelo para generar el item de contrato recurrente al empleado
-        linea_contrato_crear = self.env['contract.line']
-        #Buscar el producto de arrendamiento
-        producto_buscar = self.env['product.template'].search([('default_code', '=', 'servicio-arrend2')], limit=1) 
-
-        if operaciones_crear:
-            
-            linea_productos_vals = {
-                                    'contract_line_ids': operaciones_crear.id
-                                    'purchase_aba_id': self.id,
-                                    'product_id':producto_buscar.id,
-                                    'name': self.name,
-                                    'quantity': 1,
-                                    'date_start': self.sale_id.confirmation_date,
-                                    'product_uom': producto_buscar.product_uom.id,
-                                    'price_unit': producto_buscar.list_price,
-                                    'recurring_interval': 1,
-                                    'recurring_rule_type': 'monthly',
-                                    'recurring_invoicing_type': 'pre-paid',
-                                    }
-
-            linea_contrato_crear.create(linea_productos_vals)
-        
-            self.env.user.notify_success(message='Se genero la orden para facturacion recurrente')               
-                
-        else:
-            self.env.user.notify_success(message='No hay un contrato creado para el cliente principal, revisar la orden de venta y verificar que ese cliente tenga un contrato recurrente creado y que este activado el check de arrendamiento d2mini')
-        return True
-
     #Metodos ORM
     @api.multi
     def write(self, vals):
