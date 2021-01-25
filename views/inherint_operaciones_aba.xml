@@ -20,6 +20,11 @@
                             type="object" 
                             attrs="{'invisible': ['|', ('active','=',False), ('probability', '!=', 40)]}"
                             class="oe_highlight" />
+                    
+                     <button name="contrato_recurrente" string="Finalizar" 
+                            type="object" 
+                            attrs="{'invisible': ['|', ('active','=',False), ('probability', '!=', 100)]}"
+                            class="oe_highlight" />
 
                               
             </header>
