@@ -21,7 +21,7 @@
                             attrs="{'invisible': ['|', ('active','=',False), ('probability', '!=', 40)]}"
                             class="oe_highlight" />
 
-                              
+                                 
             </header>
 
 
