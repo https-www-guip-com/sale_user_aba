@@ -12,7 +12,8 @@
             <header>
 
                      <button name="enviar_compras_aba" string="Orden de compra" 
-                            type="object" 
+                             type="object" 
+                            groups="crm_funel_venta_guip.supervisor_nivel2_flujo_operaciones_group, crm_funel_venta_guip.gerente_flujo_operaciones_group"
                             attrs="{'invisible': ['|', ('active','=',False), ('probability', '!=', 50)]}"
                             class="oe_highlight" />
 
@@ -22,6 +23,7 @@
                             class="oe_highlight" />
                     
                      <button name="contrato_recurrente" string="Finalizar" 
+                            groups="crm_funel_venta_guip.supervisor_nivel2_flujo_operaciones_group, crm_funel_venta_guip.gerente_flujo_operaciones_group"
                             type="object" 
                             attrs="{'invisible': ['|', ('active','=',False), ('probability', '!=', 100)]}"
                             class="oe_highlight" />
@@ -48,6 +50,14 @@
                 <field name="sale_id"  readonly="1"/>
             </field>
             
+
+            <field name="probability" position="after">
+                <field name="enviado_apro"  readonly="1"/>
+                <field name="enviado_compra"  readonly="1"/>
+                <field name="instalado_aba"  readonly="1"/>
+            </field>
+
+
             <notebook>
                     <page string="ABA">
 

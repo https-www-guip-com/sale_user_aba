@@ -61,9 +61,9 @@ class SaleOrderOperaciones(models.Model):
 
 
     #Estos campos booleanos son para llevar un control de que no se mueva de etapa de envio aprobacion y de envio a compras y las demas si no se ha hecho bien el proceso
-    enviado_apro = fields.Boolean(string='Enviado Aprobacion')
-    enviado_compra = fields.Boolean(string='Enviado a compras')
-    instalado_aba = fields.Boolean(string='Instalado')
+    enviado_apro = fields.Boolean(string='Enviado Aprobacion', default=False )
+    enviado_compra = fields.Boolean(string='Enviado a compras', default=False)
+    instalado_aba = fields.Boolean(string='Instalado', default=False)
 
     @api.multi
     def enviar_compras_aba(self):
@@ -102,6 +102,7 @@ class SaleOrderOperaciones(models.Model):
         
             self.envio_correo_instalacion_proveedor()
             stage = self.write({'probability': '70'})
+            stage = self.write({'enviado_compra': True})
             stage = self.write({'stage_id': '5'})
             self.env.user.notify_success(message='Se creo la orden de compra, y se envio la orden de instalacion al proveedor') 
         else:
@@ -119,7 +120,7 @@ class SaleOrderOperaciones(models.Model):
     def envio_aprobacion(self):
         stage = self.env['crm_flujo_nuevo_operaciones'].search([('id', '=', self.id)], limit=1)
                          
-        if self.stage_id.envio_aprobacion == True:
+        if self.stage_id.envio_aprobacion == False:
                 #Cambiar estatus aqui cuando se pase a produccion verificar este paso
             stage = self.write({'stage_id': '4'})
             stage = self.write({'probability': '50'})
@@ -155,16 +156,27 @@ class SaleOrderOperaciones(models.Model):
                         if self.enviado_apro == False:
                             vals['probability'] = '40'
                         else:
-                                raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion")
+                            raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion")
                 
                 if stage_obj.sequence == '3':  
-                   raise ValidationError("Para enviar esta etapa se tiene que hacer por medio de los botones de funcion de enviar aprobacion")
-          
+                #   raise ValidationError("Para enviar esta etapa se tiene que hacer por medio de los botones de funcion de enviar aprobacion")
+                    if self.enviado_apro == False:
+                        vals['probability'] = '50'
+                        vals['enviado_apro'] = True
+                    else:
+                       raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion") 
                 if stage_obj.sequence == '4':
                     raise ValidationError("En esta etapa se tiene que enviar por medio de una orden de compra llevando el flujo establecido")
 
-                if stage_obj.sequence == '5' and self.enviado_apro == True and self.enviado_compra == True:
-                        vals['probability'] = '100'
+                if stage_obj.sequence == '5':
+                    if self.enviado_apro == False:
+                       raise ValidationError("Se tiene que enviar aprobacion ")
+                    
+                    if self.enviado_compra == False:
+                       raise ValidationError("En esta etapa se tiene que enviar por medio de una orden de compra llevando el flujo establecido")
+
+                    vals['probability'] = '100'
+                    vals['instalado_aba'] = True
 
                 if stage_obj.sequence == '6':
                     raise ValidationError("Esta instalacion se devolvio")
@@ -205,22 +217,23 @@ class SaleOrderOperaciones(models.Model):
     @api.multi
     def contrato_recurrente(self):
         #Modulo para buscar el contrato segun el proveedor
-        operaciones_crear = self.env['contract.contract'].search([('id', '=', self.sale_id.partner_id.id),('purchase_aba_id', '=', True)  ], limit=1) 
+        operaciones_crear = self.env['contract.contract'].search([('partner_id', '=', self.sale_id.partner_id.id),('contract_aba', '=', True)  ], limit=1) 
         #Moddelo para generar el item de contrato recurrente al empleado
         linea_contrato_crear = self.env['contract.line']
         #Buscar el producto de arrendamiento
         producto_buscar = self.env['product.template'].search([('default_code', '=', 'servicio-arrend2')], limit=1) 
 
+
+        #raise ValidationError(producto_buscar.name)
         if operaciones_crear:
             
             linea_productos_vals = {
-                                    'contract_line_ids': operaciones_crear.id,
+                                    'contract_id': operaciones_crear.id,
                                     'purchase_aba_id': self.id,
-                                    'product_id':producto_buscar.id,
+                                    'product_id': producto_buscar.id,
                                     'name': self.name,
                                     'quantity': 1,
                                     'date_start': self.sale_id.confirmation_date,
-                                    'product_uom': producto_buscar.product_uom.id,
                                     'price_unit': producto_buscar.list_price,
                                     'recurring_interval': 1,
                                     'recurring_rule_type': 'monthly',
