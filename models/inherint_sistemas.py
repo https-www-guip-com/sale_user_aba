@@ -68,12 +68,12 @@ class SaleOrderOperaciones(models.Model):
     @api.multi
     def enviar_compras_aba(self):
 
+        stage = self.env['crm_flujo_nuevo_operaciones'].search([('id', '=', self.id)], limit=1)
         if self.elegir_proveedor_id.email: 
         
             operaciones_crear = self.env['purchase.order']
             order_linea_crear = self.env['purchase.order.line']
-            stage = self.env['crm_flujo_nuevo_operaciones'].search([('id', '=', self.id)], limit=1)
-
+           
             today = date.today()
             now = datetime.strftime(today, '%Y-%m-%d %H:%M:%S')
 
@@ -108,6 +108,7 @@ class SaleOrderOperaciones(models.Model):
         else:
             self.env.user.notify_warning(message='No tiene agregado al proveedor al que se le enviara la orden de instalacion') 
 
+        return stage  
 
     #Envio de correo al vendedor asignado
     @api.multi
