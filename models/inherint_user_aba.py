@@ -41,7 +41,7 @@ class salesaba_inherint_usuarios_aba(models.Model):
     token = fields.Integer("Token")
     tipo_terminal = fields.Integer("Tipo Terminal")
     usuarios_aba_id = fields.Many2one('sale.order',string="Usuarios Creacion")
-
+    numer_sysaid = fields.Char("# SYSAID")
 
     
 

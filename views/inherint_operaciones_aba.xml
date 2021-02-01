@@ -49,7 +49,7 @@
 
             <field name="crm_id" position="after">
                 <field name="sale_id"  readonly="1"/>
-                <field name="operaciones_sistemas_id" />
+                <field name="operaciones_sistemas_id" readonly="1" />
             </field>
             
           
@@ -65,26 +65,26 @@
                     <page string="ABA">
 
                         <group colspan="4">
-                              <field name="name_agente_atlantida" />
-                              <field name="codigo" />
-                              <field name="terminal" />
-                              <field name="tipo_terminal" />
+                              <field name="name_agente_atlantida" readonly="1" />
+                              <field name="codigo"  readonly="1" />
+                              <field name="terminal" readonly="1" />
+                              <field name="tipo_terminal" readonly="1" />
                         </group>
 
                         <group colspan="4">
-                              <field name="name_contacto" />
-                              <field name="rtn" />
-                              <field name="usuario" />
-                              <field name="recibe_gestion" />
+                              <field name="name_contacto" readonly="1" />
+                              <field name="rtn" readonly="1" />
+                              <field name="usuario" readonly="1" />
+                              <field name="recibe_gestion" readonly="1" />
                         </group>
 
                         <group colspan="4">
-                              <field name="tipo_chip_selec" />
-                              <field name="token" />
+                              <field name="tipo_chip_selec" readonly="1" />
+                              <field name="token" readonly="1" />
                         </group>
 
                         <group colspan="8">
-                            <field name="comentarios" />
+                            <field name="comentarios" readonly="1" />
                         </group>
 
                     </page>   
