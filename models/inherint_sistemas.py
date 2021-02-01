@@ -215,7 +215,16 @@ class SaleOrderOperaciones(models.Model):
                     raise ValidationError("Esta instalacion esta en otros")
         res = super(SaleOrderOperaciones, self).write(vals)
 
+        for ticket in self:
+            if vals.get('user_id'):
+               ticket.send_user_mail_asignado()
+
         return res
+
+    
+    def send_user_mail_asignado(self):
+        self.env.ref('sale_user_aba.asignacion_operacion_email_template'). \
+        send_mail(self.id, force_send=True)
 
 
     
