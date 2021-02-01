@@ -32,6 +32,7 @@ Module to manage sale aba user
         'views/vista_motivo_perdida.xml',
         'views/inherint contract.xml',
         'data/mail_template.xml',
+        'data/sequence.xml',
     ],
     'demo': [
     ],

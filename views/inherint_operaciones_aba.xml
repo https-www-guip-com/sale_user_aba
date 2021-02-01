@@ -48,6 +48,7 @@
             </field>
 
             <field name="crm_id" position="after">
+                <field name="number"  readonly="1"/>
                 <field name="sale_id"  readonly="1"/>
                 <field name="operaciones_sistemas_id" readonly="1" />
             </field>

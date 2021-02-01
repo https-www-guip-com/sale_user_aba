@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="seq_operaciones_create" model="ir.sequence" >
+                <field name="name">crm_flujo_nuevo_operaciones</field>
+                <field name="code">crm_flujo_nuevo_operaciones_sequence</field>
+                <field name="prefix">DOT</field>
+                <field name="padding">6</field>
+                 <field name="company_id" eval="False"/>
+        
+        </record>
+    </data>
+</odoo>

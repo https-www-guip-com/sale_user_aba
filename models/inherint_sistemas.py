@@ -31,6 +31,21 @@ tipo_terminales = [
 class SaleOrderOperaciones(models.Model):
     _inherit = "crm_flujo_nuevo_operaciones"
 
+
+    number = fields.Char(string='Numero Operacion', required=True, 
+                        index=True,
+                        default=lambda self: _('New'),
+                        readonly=True)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('number', _('New')) == _('New'):
+            vals["number"] = self.env['ir.sequence'].next_by_code('crm_flujo_nuevo_operaciones_sequence') or _('New')
+        result = super(SaleOrderOperaciones, self).create(vals)
+        return result
+
+        
+  
     sale_id = fields.Many2one('sale.order', string="Orden de venta",
                                   help="Desde este campo puedes ver el inicio de la oportunidad en el CRM" ,
                                   ondelete='cascade', index=True)
