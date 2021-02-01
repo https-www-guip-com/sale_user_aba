@@ -2,17 +2,19 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError
 
 tipo_chip = [
-    ('1', 'Claro'),
+    ('1', 'Hondutel'),
     ('2', 'Tigo'),
-    ('3', 'Hondutel'),
+    ('3', 'Claro'),
     ('4', 'Otros'),
 ]
 
-tipo_terminales = [
-    ('1', 'Terminal 1'),
-    ('2', 'Terminal 2'),
-    ('3', 'Otros'),
+info_chip = [
+    ('ICC ', 'ICC'),
+    ('PIN', 'PIN'),
+    ('PUK', 'PUK'),
 ]
+
+
 class salesaba_inherint_usuarios_aba(models.Model):
     _name = "creacion_usuarios_aba"
     
@@ -31,11 +33,13 @@ class salesaba_inherint_usuarios_aba(models.Model):
     phone = fields.Char('Telefono', track_visibility='onchange', track_sequence=5)
     rtn = fields.Char("RTN")
     tipo_chip_selec = fields.Selection(tipo_chip, string='Tipo Chip', index=True, default=tipo_chip[0][0])
+    info_chip_selec = fields.Selection(info_chip, string='Informacion del chip', index=True, default=info_chip[0][0])    
+
     usuario = fields.Char("Usuarios")
     recibe_gestion = fields.Char("Recibe gestion")
     comentarios = fields.Text("Comentarios adicionales")
     token = fields.Integer("Token")
-    tipo_terminal = fields.Selection(tipo_terminales, string='Tipo de terminal', index=True, default=tipo_terminales[0][0])
+    tipo_terminal = fields.Integer("Tipo Terminal")
     usuarios_aba_id = fields.Many2one('sale.order',string="Usuarios Creacion")
 
 

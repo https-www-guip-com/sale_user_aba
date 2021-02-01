@@ -9,10 +9,17 @@ from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError, ValidationError
 
 tipo_chip = [
-    ('1', 'Claro'),
+    ('0', ''),
+    ('1', 'Hondutel'),
     ('2', 'Tigo'),
-    ('3', 'Hondutel'),
+    ('3', 'Claro'),
     ('4', 'Otros'),
+]
+
+info_chip = [
+    ('ICC ', 'ICC'),
+    ('PIN', 'PIN'),
+    ('PUK', 'PUK'),
 ]
 
 tipo_terminales = [
@@ -42,6 +49,8 @@ class SaleOrderOperaciones(models.Model):
     name_contacto = fields.Char("Nombre de contacto")
     rtn = fields.Char("RTN")
     tipo_chip_selec = fields.Selection(tipo_chip, string='Tipo Chip', index=True, default=tipo_chip[0][0])
+    info_chip_selec = fields.Selection(info_chip, string='Informacion del chip', index=True, default=info_chip[0][0])
+    
     usuario = fields.Char("Usuarios")
     recibe_gestion = fields.Char("Recibe gestion")
     comentarios = fields.Text("Comentarios adicionales")
@@ -103,10 +112,10 @@ class SaleOrderOperaciones(models.Model):
             self.envio_correo_instalacion_proveedor()
             stage = self.write({'probability': '70'})
             stage = self.write({'enviado_compra': True})
-            stage = self.write({'stage_id': '5'})
+            #stage = self.write({'stage_id': '5'})
             self.env.user.notify_success(message='Se creo la orden de compra, y se envio la orden de instalacion al proveedor') 
         else:
-            self.env.user.notify_warning(message='No tiene agregado al proveedor al que se le enviara la orden de instalacion') 
+            self.env.user.notify_warning(message='No tiene agregado el correo para este proveedor, favor agregar correo a enviar la orden de instalacion') 
 
         return stage  
 
@@ -123,7 +132,7 @@ class SaleOrderOperaciones(models.Model):
                          
         if self.stage_id.envio_aprobacion == False:
                 #Cambiar estatus aqui cuando se pase a produccion verificar este paso
-            stage = self.write({'stage_id': '4'})
+            #stage = self.write({'stage_id': '4'})
             stage = self.write({'probability': '50'})
             stage = self.write({'enviado_apro': True})
             self.env.user.notify_success(message='Se envio aprobacion correctamente.')
@@ -166,8 +175,13 @@ class SaleOrderOperaciones(models.Model):
                         vals['enviado_apro'] = True
                     else:
                        raise ValidationError("Esta instalacion ya se envio aprobacion, no se puede regresar una instalacion que ya paso por la etapada de aprobacion") 
+                
                 if stage_obj.sequence == '4':
-                    raise ValidationError("En esta etapa se tiene que enviar por medio de una orden de compra llevando el flujo establecido")
+                    if self.enviado_apro == False:
+                       raise ValidationError("Se tiene que enviar aprobacion ")
+                    
+                    if self.instalado_aba == True:
+                       raise ValidationError("Este proceso esta como estatus de instalado no se puede regresar")
 
                 if stage_obj.sequence == '5':
                     if self.enviado_apro == False:
@@ -223,7 +237,7 @@ class SaleOrderOperaciones(models.Model):
         linea_contrato_crear = self.env['contract.line']
         #Buscar el producto de arrendamiento
         producto_buscar = self.env['product.template'].search([('default_code', '=', 'servicio-arrend2')], limit=1) 
-
+        stage = self.env['crm_flujo_nuevo_operaciones'].search([('id', '=', self.id)], limit=1)
 
         #raise ValidationError(producto_buscar.name)
         if operaciones_crear:
@@ -242,7 +256,7 @@ class SaleOrderOperaciones(models.Model):
                                     }
 
             linea_contrato_crear.create(linea_productos_vals)
-        
+            stage = self.write({'instalado_aba': True}) 
             self.env.user.notify_success(message='Se genero la orden para facturacion recurrente')               
                 
         else:
