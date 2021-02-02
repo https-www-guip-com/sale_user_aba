@@ -231,7 +231,7 @@
                                 <p>La tarea en operaciones con el numero ${object.number or 'n/a'} se te ha asignado.</p>
                               
                                 Muchas gracias,<br/><br/>
-                                ${user.signature | safe}<br/>
+                                
                             </div>
                         </td></tr>
                         <tr><td style="text-align:center;">

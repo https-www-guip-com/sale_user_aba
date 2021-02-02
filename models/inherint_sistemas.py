@@ -97,7 +97,8 @@ class SaleOrderOperaciones(models.Model):
         
             operaciones_crear = self.env['purchase.order']
             order_linea_crear = self.env['purchase.order.line']
-           
+            producto_buscar = self.env['product.template'].search([('default_code', '=', 'servicio-arrend2')], limit=1) 
+
             today = date.today()
             now = datetime.strftime(today, '%Y-%m-%d %H:%M:%S')
 
@@ -110,19 +111,19 @@ class SaleOrderOperaciones(models.Model):
             res = operaciones_crear.create(operaciones_line_vals)
         # Orden de compra order_line
 
-            for ventas in self.sale_id.order_line:
+            #for ventas in self.sale_id.order_line:
 
-                linea_productos_vals = {
+            linea_productos_vals = {
                                     'order_id': res.id,
-                                    'product_id':ventas.product_id.id,
-                                    'name': ventas.name,
-                                    'date_planned': self.sale_id.confirmation_date,
-                                    'product_qty': ventas.product_uom_qty,
-                                    'product_uom': ventas.product_uom.id,
-                                    'price_unit': ventas.price_unit,
+                                    'product_id':producto_buscar.id,
+                                    'name': producto_buscar.name,
+                                    'date_planned': now,
+                                    'product_qty': 1,
+                                    'product_uom': 1,
+                                    'price_unit': producto_buscar.standard_price,
                                     }
 
-                order_linea_crear.create(linea_productos_vals)
+            order_linea_crear.create(linea_productos_vals)
         
             self.envio_correo_instalacion_proveedor()
             stage = self.write({'probability': '70'})
