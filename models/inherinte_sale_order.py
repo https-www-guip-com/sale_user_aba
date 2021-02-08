@@ -93,7 +93,7 @@ class SaleOrderAba(models.Model):
                         'email_from':self.opportunity_id.email_from,
                         'description': self.opportunity_id.description,
                         'active': self.opportunity_id.active,
-                        'stage_id': '1',
+                        'stage_id.id': 'no_planificado1_sis',
                         'date_open': now,
                         'vendedor_id': self.opportunity_id.user_id.id,
 
@@ -122,7 +122,7 @@ class SaleOrderAba(models.Model):
                         'email_from':self.opportunity_id.email_from,
                         'description': self.opportunity_id.description,
                         'active': self.opportunity_id.active,
-                        'stage_id': '1',
+                        'stage_id.id': 'no_planificado1',
                         'date_open': now,
                         'vendedor_id': self.opportunity_id.user_id.id,
 
@@ -165,7 +165,7 @@ class SaleOrderAba(models.Model):
                             'name':aba_campos.name_agente_atlantida,
                             'email_from':self.partner_id.email,
                             'description': self.note,
-                            'stage_id': '1',
+                            'stage_id.id': 'no_planificado1',
                             'date_open': now,
                             'vendedor_id': self.user_id.id,
 

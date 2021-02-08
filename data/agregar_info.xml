@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--ETAPAS OPERACIONES-->
+         <record id="no_planificado1" model="flujo_etapas_operaciones">
+            <field name="name">No planificado</field>
+            <field name="sequence">1</field>
+            <field name="probability">10</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="recepcion_equipo2"  model="flujo_etapas_operaciones">
+            <field name="name">Recepcion de equipo</field>
+            <field name="sequence">2</field>
+            <field name="probability">20</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="confi_equipo3"  model="flujo_etapas_operaciones">
+            <field name="name">Configuracion de equipo</field>
+            <field name="sequence">3</field>
+            <field name="probability">40</field>
+            <field name="active">True</field>
+        </record>
+
+
+        <record id="aprobac_envio4"  model="flujo_etapas_operaciones">
+            <field name="name">Aprobacion de envio</field>
+            <field name="sequence">4</field>
+            <field name="probability">50</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="enviado_aprobar_5"  model="flujo_etapas_operaciones">
+            <field name="name">Enviado a proveedor</field>
+            <field name="sequence">5</field>
+            <field name="probability">70</field>
+            <field name="active">True</field>
+        </record>
+
+       <record id="instalado6"  model="flujo_etapas_operaciones">
+            <field name="name">Instalado</field>
+            <field name="sequence">6</field>
+            <field name="probability">100</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="devuelto7"  model="flujo_etapas_operaciones">
+            <field name="name">Devuelto</field>
+            <field name="sequence">7</field>
+            <field name="probability">120</field>
+            <field name="active">True</field>
+        </record>
+
+        <record id="otros8"  model="flujo_etapas_operaciones">
+            <field name="name">Otros</field>
+            <field name="sequence">8</field>
+            <field name="probability">130</field>
+            <field name="active">True</field>
+        </record>
+
+        
+         <!--ETAPAS PLATAFORMA-->
+         <record id="no_planificado1_sis" model="flujo_etapas_sistemas">
+            <field name="name">No planificado</field>
+            <field name="sequence">1</field>
+            <field name="probability">10</field>
+            <field name="active">True</field>
+        </record>
+
+         <record id="recepcion_equipo2_sis"  model="flujo_etapas_sistemas">
+            <field name="name">Creacion de organizacion / Usuarios</field>
+            <field name="sequence">2</field>
+            <field name="probability">20</field>
+            <field name="active">True</field>
+        </record>
+
+         <record id="instalado6_sis" model="flujo_etapas_sistemas">
+            <field name="name">Instalado</field>
+            <field name="sequence">6</field>
+            <field name="probability">100</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>

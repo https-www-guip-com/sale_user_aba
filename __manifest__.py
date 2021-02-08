@@ -22,7 +22,10 @@ Module to manage sale aba user
 """,
     'depends': ['sale',
                 'sale_management',
-                'account'
+                'account',
+                'purchase',
+                'contract',
+                'sale_crm'
                 ],
     'data': [
         'security/ir.model.access.csv',
@@ -33,6 +36,7 @@ Module to manage sale aba user
         'views/inherint contract.xml',
         'data/mail_template.xml',
         'data/sequence.xml',
+        'data/agregar_info.xml',
     ],
     'demo': [
     ],

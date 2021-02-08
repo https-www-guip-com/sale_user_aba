@@ -128,6 +128,7 @@ class SaleOrderOperaciones(models.Model):
             self.envio_correo_instalacion_proveedor()
             stage = self.write({'probability': '70'})
             stage = self.write({'enviado_compra': True})
+            stage = self.write({'stage_id.id': 'enviado_aprobar_5'})
             #stage = self.write({'stage_id': '5'})
             self.env.user.notify_success(message='Se creo la orden de compra, y se envio la orden de instalacion al proveedor') 
         else:
@@ -148,7 +149,7 @@ class SaleOrderOperaciones(models.Model):
                          
         if self.stage_id.envio_aprobacion == False:
                 #Cambiar estatus aqui cuando se pase a produccion verificar este paso
-            #stage = self.write({'stage_id': '4'})
+            stage = self.write({'stage_id.id': 'aprobac_envio4'})
             stage = self.write({'probability': '50'})
             stage = self.write({'enviado_apro': True})
             self.env.user.notify_success(message='Se envio aprobacion correctamente.')
